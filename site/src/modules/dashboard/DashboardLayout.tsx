@@ -21,8 +21,8 @@ export const DashboardLayout: FC = () => {
 
   return (
     <>
-      <ServiceBanner />
       {canViewDeployment && <LicenseBanner />}
+      <ServiceBanner />
 
       <div
         css={{

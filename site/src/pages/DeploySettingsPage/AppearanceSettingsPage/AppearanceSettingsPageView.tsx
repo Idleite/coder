@@ -11,6 +11,7 @@ import { BlockPicker } from "react-color";
 import type { UpdateAppearanceConfig } from "api/typesGenerated";
 import {
   Badges,
+  DeprecatedBadge,
   DisabledBadge,
   EnterpriseBadge,
   EntitledBadge,
@@ -160,7 +161,11 @@ export const AppearanceSettingsPageView: FC<
       </Fieldset>
 
       <Fieldset
-        title="Service Banner"
+        title={
+          <Stack direction="row">
+            Service Banner <DeprecatedBadge />
+          </Stack>
+        }
         subtitle="Configure a banner that displays a message to all users."
         onSubmit={serviceBannerForm.handleSubmit}
         button={
@@ -235,7 +240,7 @@ export const AppearanceSettingsPageView: FC<
             </Stack>
 
             <Stack spacing={0}>
-              <h3>{"Background Color"}</h3>
+              <h3>Background Color</h3>
               <BlockPicker
                 color={backgroundColor}
                 onChange={async (color) => {

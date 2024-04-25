@@ -13,6 +13,13 @@ const meta: Meta<typeof AppearanceSettingsPageView> = {
         message: "hello world",
         background_color: "white",
       },
+      notification_banners: [
+        {
+          enabled: true,
+          message: "hello world",
+          background_color: "white",
+        },
+      ],
     },
     isEntitled: false,
   },

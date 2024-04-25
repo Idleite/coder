@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/sync/errgroup"
@@ -53,9 +54,12 @@ func newAppearanceFetcher(store database.Store, links []codersdk.LinkConfig) agp
 
 func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfig, error) {
 	var eg errgroup.Group
-	var applicationName string
-	var logoURL string
-	var serviceBannerJSON string
+	var (
+		applicationName         string
+		logoURL                 string
+		serviceBannerJSON       string
+		notificationBannersJSON string
+	)
 	eg.Go(func() (err error) {
 		applicationName, err = f.database.GetApplicationName(ctx)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -77,6 +81,13 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 		}
 		return nil
 	})
+	eg.Go(func() (err error) {
+		notificationBannersJSON, err = f.database.GetNotificationBanners(ctx)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return xerrors.Errorf("get notification banners: %w", err)
+		}
+		return nil
+	})
 	err := eg.Wait()
 	if err != nil {
 		return codersdk.AppearanceConfig{}, err
@@ -90,7 +101,15 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 		err = json.Unmarshal([]byte(serviceBannerJSON), &cfg.ServiceBanner)
 		if err != nil {
 			return codersdk.AppearanceConfig{}, xerrors.Errorf(
-				"unmarshal json: %w, raw: %s", err, serviceBannerJSON,
+				"unmarshal service banner json: %w, raw: %s", err, serviceBannerJSON,
+			)
+		}
+	}
+	if notificationBannersJSON != "" {
+		err = json.Unmarshal([]byte(notificationBannersJSON), &cfg.NotificationBanners)
+		if err != nil {
+			return codersdk.AppearanceConfig{}, xerrors.Errorf(
+				"unmarshal notification banners json: %w, raw: %s", err, notificationBannersJSON,
 			)
 		}
 	}
@@ -142,7 +161,7 @@ func (api *API) putAppearance(rw http.ResponseWriter, r *http.Request) {
 	if appearance.ServiceBanner.Enabled {
 		if err := validateHexColor(appearance.ServiceBanner.BackgroundColor); err != nil {
 			httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{
-				Message: "Invalid color format",
+				Message: fmt.Sprintf("Invalid color format: %q", appearance.ServiceBanner.BackgroundColor),
 				Detail:  err.Error(),
 			})
 			return
@@ -162,6 +181,34 @@ func (api *API) putAppearance(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		httpapi.Write(ctx, rw, http.StatusInternalServerError, codersdk.Response{
 			Message: "Unable to set service banner",
+			Detail:  err.Error(),
+		})
+		return
+	}
+
+	for _, banner := range appearance.NotificationBanners {
+		if err := validateHexColor(banner.BackgroundColor); err != nil {
+			httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{
+				Message: fmt.Sprintf("Invalid color format: %q", banner.BackgroundColor),
+				Detail:  err.Error(),
+			})
+			return
+		}
+	}
+
+	notificationBannersJSON, err := json.Marshal(appearance.ServiceBanner)
+	if err != nil {
+		httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{
+			Message: "Unable to marshal notification banners",
+			Detail:  err.Error(),
+		})
+		return
+	}
+
+	err = api.Database.UpsertNotificationBanners(ctx, string(notificationBannersJSON))
+	if err != nil {
+		httpapi.Write(ctx, rw, http.StatusInternalServerError, codersdk.Response{
+			Message: "Unable to set notification banners",
 			Detail:  err.Error(),
 		})
 		return

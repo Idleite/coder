@@ -646,6 +646,13 @@ func (m metricsStore) GetLogoURL(ctx context.Context) (string, error) {
 	return url, err
 }
 
+func (m metricsStore) GetNotificationBanners(ctx context.Context) (string, error) {
+	start := time.Now()
+	r0, r1 := m.s.GetNotificationBanners(ctx)
+	m.queryLatencies.WithLabelValues("GetNotificationBanners").Observe(time.Since(start).Seconds())
+	return r0, r1
+}
+
 func (m metricsStore) GetOAuth2ProviderAppByID(ctx context.Context, id uuid.UUID) (database.OAuth2ProviderApp, error) {
 	start := time.Now()
 	r0, r1 := m.s.GetOAuth2ProviderAppByID(ctx, id)
@@ -2183,6 +2190,13 @@ func (m metricsStore) UpsertLogoURL(ctx context.Context, value string) error {
 	start := time.Now()
 	r0 := m.s.UpsertLogoURL(ctx, value)
 	m.queryLatencies.WithLabelValues("UpsertLogoURL").Observe(time.Since(start).Seconds())
+	return r0
+}
+
+func (m metricsStore) UpsertNotificationBanners(ctx context.Context, value string) error {
+	start := time.Now()
+	r0 := m.s.UpsertNotificationBanners(ctx, value)
+	m.queryLatencies.WithLabelValues("UpsertNotificationBanners").Observe(time.Since(start).Seconds())
 	return r0
 }
 

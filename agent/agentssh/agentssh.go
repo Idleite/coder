@@ -63,7 +63,7 @@ type Config struct {
 	// file will be displayed to the user upon login.
 	MOTDFile func() string
 	// ServiceBanner returns the configuration for the Coder service banner.
-	ServiceBanner func() *codersdk.ServiceBannerConfig
+	ServiceBanner func() *codersdk.BannerConfig
 	// UpdateEnv updates the environment variables for the command to be
 	// executed. It can be used to add, modify or replace environment variables.
 	UpdateEnv func(current []string) (updated []string, err error)
@@ -124,7 +124,7 @@ func NewServer(ctx context.Context, logger slog.Logger, prometheusRegistry *prom
 		config.MOTDFile = func() string { return "" }
 	}
 	if config.ServiceBanner == nil {
-		config.ServiceBanner = func() *codersdk.ServiceBannerConfig { return &codersdk.ServiceBannerConfig{} }
+		config.ServiceBanner = func() *codersdk.BannerConfig { return &codersdk.BannerConfig{} }
 	}
 	if config.WorkingDirectory == nil {
 		config.WorkingDirectory = func() string {

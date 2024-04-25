@@ -141,7 +141,7 @@ func TestServiceBanners(t *testing.T) {
 			},
 		})
 		cfg := codersdk.UpdateAppearanceConfig{
-			ServiceBanner: codersdk.ServiceBannerConfig{
+			ServiceBanner: codersdk.BannerConfig{
 				Enabled:         true,
 				Message:         "Hey",
 				BackgroundColor: "#00FF00",
@@ -165,17 +165,17 @@ func TestServiceBanners(t *testing.T) {
 		agplAgentClient := agentsdk.New(agplClient.URL)
 		agplAgentClient.SetSessionToken(r.AgentToken)
 		banner = requireGetServiceBanner(ctx, t, agplAgentClient)
-		require.Equal(t, codersdk.ServiceBannerConfig{}, banner)
+		require.Equal(t, codersdk.BannerConfig{}, banner)
 
 		// No license means no banner.
 		err = client.DeleteLicense(ctx, lic.ID)
 		require.NoError(t, err)
 		banner = requireGetServiceBanner(ctx, t, agentClient)
-		require.Equal(t, codersdk.ServiceBannerConfig{}, banner)
+		require.Equal(t, codersdk.BannerConfig{}, banner)
 	})
 }
 
-func requireGetServiceBanner(ctx context.Context, t *testing.T, client *agentsdk.Client) codersdk.ServiceBannerConfig {
+func requireGetServiceBanner(ctx context.Context, t *testing.T, client *agentsdk.Client) codersdk.BannerConfig {
 	cc, err := client.ConnectRPC(ctx)
 	require.NoError(t, err)
 	defer func() {
