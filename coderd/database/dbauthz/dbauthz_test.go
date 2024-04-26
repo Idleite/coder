@@ -528,6 +528,9 @@ func (s *MethodTestSuite) TestLicense() {
 	s.Run("UpsertServiceBanner", s.Subtest(func(db database.Store, check *expects) {
 		check.Args("value").Asserts(rbac.ResourceDeploymentValues, rbac.ActionCreate)
 	}))
+	s.Run("UpsertNotificationBanners", s.Subtest(func(db database.Store, check *expects) {
+		check.Args("value").Asserts(rbac.ResourceDeploymentValues, rbac.ActionCreate)
+	}))
 	s.Run("GetLicenseByID", s.Subtest(func(db database.Store, check *expects) {
 		l, err := db.InsertLicense(context.Background(), database.InsertLicenseParams{
 			UUID: uuid.New(),
@@ -558,6 +561,11 @@ func (s *MethodTestSuite) TestLicense() {
 	}))
 	s.Run("GetServiceBanner", s.Subtest(func(db database.Store, check *expects) {
 		err := db.UpsertServiceBanner(context.Background(), "value")
+		require.NoError(s.T(), err)
+		check.Args().Asserts().Returns("value")
+	}))
+	s.Run("GetNotificationBanners", s.Subtest(func(db database.Store, check *expects) {
+		err := db.UpsertNotificationBanners(context.Background(), "value")
 		require.NoError(s.T(), err)
 		check.Args().Asserts().Returns("value")
 	}))
