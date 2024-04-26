@@ -196,7 +196,7 @@ func (api *API) putAppearance(rw http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	notificationBannersJSON, err := json.Marshal(appearance.ServiceBanner)
+	notificationBannersJSON, err := json.Marshal(appearance.NotificationBanners)
 	if err != nil {
 		httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{
 			Message: "Unable to marshal notification banners",
