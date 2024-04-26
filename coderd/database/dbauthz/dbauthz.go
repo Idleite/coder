@@ -1222,7 +1222,7 @@ func (q *querier) GetLogoURL(ctx context.Context) (string, error) {
 
 func (q *querier) GetNotificationBanners(ctx context.Context) (string, error) {
 	// No authz checks
-	return q.db.GetServiceBanner(ctx)
+	return q.db.GetNotificationBanners(ctx)
 }
 
 func (q *querier) GetOAuth2ProviderAppByID(ctx context.Context, id uuid.UUID) (database.OAuth2ProviderApp, error) {
@@ -3373,7 +3373,7 @@ func (q *querier) UpsertNotificationBanners(ctx context.Context, value string) e
 	if err := q.authorizeContext(ctx, rbac.ActionCreate, rbac.ResourceDeploymentValues); err != nil {
 		return err
 	}
-	return q.db.UpsertServiceBanner(ctx, value)
+	return q.db.UpsertNotificationBanners(ctx, value)
 }
 
 func (q *querier) UpsertOAuthSigningKey(ctx context.Context, value string) error {
