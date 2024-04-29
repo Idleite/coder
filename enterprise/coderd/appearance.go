@@ -94,9 +94,12 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 	}
 
 	cfg := codersdk.AppearanceConfig{
-		ApplicationName: applicationName,
-		LogoURL:         logoURL,
+		ApplicationName:     applicationName,
+		LogoURL:             logoURL,
+		NotificationBanners: []codersdk.BannerConfig{},
+		SupportLinks:        agpl.DefaultSupportLinks,
 	}
+
 	if serviceBannerJSON != "" {
 		err = json.Unmarshal([]byte(serviceBannerJSON), &cfg.ServiceBanner)
 		if err != nil {
@@ -113,10 +116,7 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 			)
 		}
 	}
-
-	if len(f.supportLinks) == 0 {
-		cfg.SupportLinks = agpl.DefaultSupportLinks
-	} else {
+	if len(f.supportLinks) > 0 {
 		cfg.SupportLinks = f.supportLinks
 	}
 

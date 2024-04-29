@@ -27,7 +27,7 @@ export type AppearanceSettingsPageViewProps = {
   isEntitled: boolean;
   onSaveAppearance: (
     newConfig: Partial<UpdateAppearanceConfig>,
-    preview: boolean,
+    preview?: boolean,
   ) => void;
 };
 
@@ -280,6 +280,31 @@ export const AppearanceSettingsPageView: FC<
             </Stack>
           </Stack>
         )}
+      </Fieldset>
+
+      <Fieldset
+        title="Notification Banners"
+        onSubmit={() =>
+          onSaveAppearance({
+            notification_banners: [
+              {
+                enabled: true,
+                message: "Just a real nice test :)",
+                background_color: "#ffaff3",
+              },
+            ],
+          })
+        }
+      >
+        <>
+          {appearance.notification_banners
+            .filter((banner) => banner.enabled)
+            .map((banner) => (
+              <div css={{ backgroundColor: banner.background_color }}>
+                {banner.message}
+              </div>
+            ))}
+        </>
       </Fieldset>
     </>
   );

@@ -5,13 +5,13 @@ import { getMetadataAsJSON } from "utils/metadata";
 import { cachedQuery } from "./util";
 
 const initialAppearanceData = getMetadataAsJSON<AppearanceConfig>("appearance");
-const appearanceConfigKey = ["appearance"] as const;
+export const appearanceConfigKey = ["appearance"] as const;
 
 export const appearance = (): UseQueryOptions<AppearanceConfig> => {
   // We either have our initial data or should immediately fetch and never again!
   return cachedQuery({
     initialData: initialAppearanceData,
-    queryKey: ["appearance"],
+    queryKey: appearanceConfigKey,
     queryFn: () => API.getAppearance(),
   });
 };

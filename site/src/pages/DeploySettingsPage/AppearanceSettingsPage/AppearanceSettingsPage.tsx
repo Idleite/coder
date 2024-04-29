@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Helmet } from "react-helmet-async";
 import { useMutation, useQueryClient } from "react-query";
 import { getErrorMessage } from "api/errors";
-import { updateAppearance } from "api/queries/appearance";
+import { appearanceConfigKey, updateAppearance } from "api/queries/appearance";
 import type { UpdateAppearanceConfig } from "api/typesGenerated";
 import { displayError, displaySuccess } from "components/GlobalSnackbar/utils";
 import { useDashboard } from "modules/dashboard/useDashboard";
@@ -20,7 +20,7 @@ const AppearanceSettingsPage: FC = () => {
 
   const onSaveAppearance = async (
     newConfig: Partial<UpdateAppearanceConfig>,
-    preview: boolean,
+    preview: boolean = false,
   ) => {
     const newAppearance = { ...appearance.config, ...newConfig };
     if (preview) {
@@ -30,6 +30,7 @@ const AppearanceSettingsPage: FC = () => {
 
     try {
       await updateAppearanceMutation.mutateAsync(newAppearance);
+      queryClient.invalidateQueries(appearanceConfigKey);
       displaySuccess("Successfully updated appearance settings!");
     } catch (error) {
       displayError(
