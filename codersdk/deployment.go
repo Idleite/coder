@@ -200,6 +200,7 @@ type DeploymentValues struct {
 	AllowWorkspaceRenames           serpent.Bool                         `json:"allow_workspace_renames,omitempty" typescript:",notnull"`
 	Healthcheck                     HealthcheckConfig                    `json:"healthcheck,omitempty" typescript:",notnull"`
 	CLIUpgradeMessage               serpent.String                       `json:"cli_upgrade_message,omitempty" typescript:",notnull"`
+	TermsOfServiceURL               serpent.String                       `json:"terms_of_service_url,omitempty" typescript:",notnull"`
 
 	Config      serpent.YAMLConfigPath `json:"config,omitempty" typescript:",notnull"`
 	WriteConfig serpent.Bool           `json:"write_config,omitempty" typescript:",notnull"`
@@ -1684,6 +1685,14 @@ when required by your organization's security policy.`,
 			Annotations: serpent.Annotations{}.Mark(annotationExternalProxies, "true"),
 		},
 		{
+			Name:        "Terms of Service URL",
+			Description: "A URL to an external Terms of Service that must be accepted by users when logging in.",
+			Flag:        "terms-of-service-url",
+			Env:         "CODER_TERMS_OF_SERVICE_URL",
+			YAML:        "termsOfServiceURL",
+			Value:       &c.TermsOfServiceURL,
+		},
+		{
 			Name: "Strict-Transport-Security",
 			Description: "Controls if the 'Strict-Transport-Security' header is set on all static file responses. " +
 				"This header should only be set if the server is accessed via HTTPS. This value is the MaxAge in seconds of " +
@@ -2149,6 +2158,9 @@ type BuildInfoResponse struct {
 	// UpgradeMessage is the message displayed to users when an outdated client
 	// is detected.
 	UpgradeMessage string `json:"upgrade_message"`
+
+	// DeploymentID is the unique identifier for this deployment.
+	DeploymentID string `json:"deployment_id"`
 }
 
 type WorkspaceProxyBuildInfo struct {

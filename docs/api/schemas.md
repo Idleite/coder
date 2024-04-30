@@ -1048,17 +1048,19 @@
   },
   "password": {
     "enabled": true
-  }
+  },
+  "terms_of_service_url": "string"
 }
 ```
 
 ### Properties
 
-| Name       | Type                                               | Required | Restrictions | Description |
-| ---------- | -------------------------------------------------- | -------- | ------------ | ----------- |
-| `github`   | [codersdk.AuthMethod](#codersdkauthmethod)         | false    |              |             |
-| `oidc`     | [codersdk.OIDCAuthMethod](#codersdkoidcauthmethod) | false    |              |             |
-| `password` | [codersdk.AuthMethod](#codersdkauthmethod)         | false    |              |             |
+| Name                   | Type                                               | Required | Restrictions | Description |
+| ---------------------- | -------------------------------------------------- | -------- | ------------ | ----------- |
+| `github`               | [codersdk.AuthMethod](#codersdkauthmethod)         | false    |              |             |
+| `oidc`                 | [codersdk.OIDCAuthMethod](#codersdkoidcauthmethod) | false    |              |             |
+| `password`             | [codersdk.AuthMethod](#codersdkauthmethod)         | false    |              |             |
+| `terms_of_service_url` | string                                             | false    |              |             |
 
 ## codersdk.AuthorizationCheck
 
@@ -1202,6 +1204,7 @@ AuthorizationObject can represent a "set" of objects, such as: all workspaces in
 {
   "agent_api_version": "string",
   "dashboard_url": "string",
+  "deployment_id": "string",
   "external_url": "string",
   "upgrade_message": "string",
   "version": "string",
@@ -1215,6 +1218,7 @@ AuthorizationObject can represent a "set" of objects, such as: all workspaces in
 | ------------------- | ------- | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `agent_api_version` | string  | false    |              | Agent api version is the current version of the Agent API (back versions MAY still be supported).                                                                   |
 | `dashboard_url`     | string  | false    |              | Dashboard URL is the URL to hit the deployment's dashboard. For external workspace proxies, this is the coderd they are connected to.                               |
+| `deployment_id`     | string  | false    |              | Deployment ID is the unique identifier for this deployment.                                                                                                         |
 | `external_url`      | string  | false    |              | External URL references the current Coder version. For production builds, this will link directly to a release. For development builds, this will link to a commit. |
 | `upgrade_message`   | string  | false    |              | Upgrade message is the message displayed to users when an outdated client is detected.                                                                              |
 | `version`           | string  | false    |              | Version returns the semantic version of the build.                                                                                                                  |
@@ -2128,6 +2132,7 @@ CreateWorkspaceRequest provides options for creating a new workspace. Only one o
         "user": {}
       }
     },
+    "terms_of_service_url": "string",
     "tls": {
       "address": {
         "host": "string",
@@ -2500,6 +2505,7 @@ CreateWorkspaceRequest provides options for creating a new workspace. Only one o
       "user": {}
     }
   },
+  "terms_of_service_url": "string",
   "tls": {
     "address": {
       "host": "string",
@@ -2588,6 +2594,7 @@ CreateWorkspaceRequest provides options for creating a new workspace. Only one o
 | `support`                            | [codersdk.SupportConfig](#codersdksupportconfig)                                                     | false    |              |                                                                    |
 | `swagger`                            | [codersdk.SwaggerConfig](#codersdkswaggerconfig)                                                     | false    |              |                                                                    |
 | `telemetry`                          | [codersdk.TelemetryConfig](#codersdktelemetryconfig)                                                 | false    |              |                                                                    |
+| `terms_of_service_url`               | string                                                                                               | false    |              |                                                                    |
 | `tls`                                | [codersdk.TLSConfig](#codersdktlsconfig)                                                             | false    |              |                                                                    |
 | `trace`                              | [codersdk.TraceConfig](#codersdktraceconfig)                                                         | false    |              |                                                                    |
 | `update_check`                       | boolean                                                                                              | false    |              |                                                                    |

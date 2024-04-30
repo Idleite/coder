@@ -8457,6 +8457,9 @@ const docTemplate = `{
                 },
                 "password": {
                     "$ref": "#/definitions/codersdk.AuthMethod"
+                },
+                "terms_of_service_url": {
+                    "type": "string"
                 }
             }
         },
@@ -8561,6 +8564,10 @@ const docTemplate = `{
                 },
                 "dashboard_url": {
                     "description": "DashboardURL is the URL to hit the deployment's dashboard.\nFor external workspace proxies, this is the coderd they are connected\nto.",
+                    "type": "string"
+                },
+                "deployment_id": {
+                    "description": "DeploymentID is the unique identifier for this deployment.",
                     "type": "string"
                 },
                 "external_url": {
@@ -9432,6 +9439,9 @@ const docTemplate = `{
                 },
                 "telemetry": {
                     "$ref": "#/definitions/codersdk.TelemetryConfig"
+                },
+                "terms_of_service_url": {
+                    "type": "string"
                 },
                 "tls": {
                     "$ref": "#/definitions/codersdk.TLSConfig"
