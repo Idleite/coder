@@ -1,38 +1,19 @@
-import { useTheme } from "@emotion/react";
+import { type CSSObject, useTheme } from "@emotion/react";
+import AddIcon from "@mui/icons-material/AddOutlined";
 import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import Link from "@mui/material/Link";
-import Switch from "@mui/material/Switch";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
-import { type FC, useState } from "react";
-import { BlockPicker } from "react-color";
-import type { BannerConfig, UpdateAppearanceConfig } from "api/typesGenerated";
-import {
-  Badges,
-  DeprecatedBadge,
-  DisabledBadge,
-  EnterpriseBadge,
-  EntitledBadge,
-} from "components/Badges/Badges";
-import { Stack } from "components/Stack/Stack";
-import colors from "theme/tailwindColors";
-import { getFormHelpers } from "utils/formUtils";
-import { Fieldset } from "../Fieldset";
-import { Header } from "../Header";
-import { NotificationBannerItem } from "./NotificationBannerItem";
-import { EmptyState } from "components/EmptyState/EmptyState";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import AddIcon from "@mui/icons-material/AddOutlined";
-import { NotificationBannerDialog } from "./NotificationBannerDialog";
-import { DeleteDialog } from "components/Dialogs/DeleteDialog/DeleteDialog";
+import { type FC, useState } from "react";
+import type { BannerConfig } from "api/typesGenerated";
 import { ConfirmDialog } from "components/Dialogs/ConfirmDialog/ConfirmDialog";
+import { EmptyState } from "components/EmptyState/EmptyState";
+import { Stack } from "components/Stack/Stack";
+import { NotificationBannerDialog } from "./NotificationBannerDialog";
+import { NotificationBannerItem } from "./NotificationBannerItem";
 
 interface NotificationBannerSettingsProps {
   notificationBanners: readonly BannerConfig[];
@@ -42,6 +23,7 @@ interface NotificationBannerSettingsProps {
 export const NotificationBannerSettings: FC<
   NotificationBannerSettingsProps
 > = ({ notificationBanners, onSubmit }) => {
+  const theme = useTheme();
   const [banners, setBanners] = useState(notificationBanners);
   const [editingBannerId, setEditingBannerId] = useState<number | null>(null);
   const [deletingBannerId, setDeletingBannerId] = useState<number | null>(null);
@@ -73,57 +55,80 @@ export const NotificationBannerSettings: FC<
 
   return (
     <>
-      <Fieldset
-        title={
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <div>Notification Banners</div>
-            <Button onClick={() => addBanner()} startIcon={<AddIcon />}>
-              New
-            </Button>
-          </Stack>
-        }
-        subtitle="Display message banners to all users."
-        onSubmit={() => onSubmit(banners)}
+      <div
+        css={{
+          borderRadius: 8,
+          border: `1px solid ${theme.palette.divider}`,
+          marginTop: 32,
+          padding: 24,
+        }}
       >
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell width="1%">Enabled</TableCell>
-                <TableCell>Message</TableCell>
-                <TableCell>Color</TableCell>
-                <TableCell width="1%" />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {banners.length < 1 ? (
-                <TableCell colSpan={999}>
-                  <EmptyState message="No notification banners" />
-                </TableCell>
-              ) : (
-                banners.map((banner, i) => (
-                  <NotificationBannerItem
-                    key={banner.message}
-                    enabled={banner.enabled}
-                    backgroundColor={banner.background_color}
-                    message={banner.message}
-                    onEdit={() => setEditingBannerId(i)}
-                    onUpdate={(banner) => {
-                      updateBanner(i, banner);
-                      onSubmit(banners);
-                    }}
-                    onDelete={() => setDeletingBannerId(i)}
-                  />
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Fieldset>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <h3
+            css={{
+              fontSize: 20,
+              margin: 0,
+              fontWeight: 600,
+            }}
+          >
+            Notification Banners
+          </h3>
+          <Button onClick={() => addBanner()} startIcon={<AddIcon />}>
+            New
+          </Button>
+        </Stack>
+        <div
+          css={{
+            color: theme.palette.text.secondary,
+            fontSize: 14,
+            marginTop: 8,
+          }}
+        >
+          Display message banners to all users.
+        </div>
+
+        <div css={[theme.typography.body2 as CSSObject, { paddingTop: 16 }]}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell width="1%">Enabled</TableCell>
+                  <TableCell>Message</TableCell>
+                  <TableCell>Color</TableCell>
+                  <TableCell width="1%" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {banners.length < 1 ? (
+                  <TableCell colSpan={999}>
+                    <EmptyState message="No notification banners" />
+                  </TableCell>
+                ) : (
+                  banners.map((banner, i) => (
+                    <NotificationBannerItem
+                      key={banner.message}
+                      enabled={banner.enabled}
+                      backgroundColor={banner.background_color}
+                      message={banner.message}
+                      onEdit={() => setEditingBannerId(i)}
+                      onUpdate={async (banner) => {
+                        const newBanners = updateBanner(i, banner);
+                        await onSubmit(newBanners);
+                      }}
+                      onDelete={() => setDeletingBannerId(i)}
+                    />
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      </div>
+
       {editingBanner && (
         <NotificationBannerDialog
           banner={editingBanner}
@@ -135,6 +140,7 @@ export const NotificationBannerSettings: FC<
           }}
         />
       )}
+
       {deletingBanner && (
         <ConfirmDialog
           type="delete"
@@ -144,7 +150,7 @@ export const NotificationBannerSettings: FC<
           onClose={() => setDeletingBannerId(null)}
           onConfirm={async () => {
             const newBanners = removeBanner(deletingBannerId);
-            setEditingBannerId(null);
+            setDeletingBannerId(null);
             await onSubmit(newBanners);
           }}
         />

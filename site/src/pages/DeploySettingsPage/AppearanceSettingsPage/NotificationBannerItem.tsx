@@ -1,9 +1,9 @@
-import type { FC } from "react";
-import type { BannerConfig } from "api/typesGenerated";
+import type { Interpolation, Theme } from "@emotion/react";
 import Checkbox from "@mui/material/Checkbox";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import type { Interpolation, Theme } from "@emotion/react";
+import type { FC } from "react";
+import type { BannerConfig } from "api/typesGenerated";
 import {
   MoreMenu,
   MoreMenuContent,
@@ -11,13 +11,12 @@ import {
   MoreMenuTrigger,
   ThreeDotsButton,
 } from "components/MoreMenu/MoreMenu";
-import EditIcon from "@mui/icons-material/Edit";
 
 interface NotificationBannerItemProps {
   enabled: boolean;
   backgroundColor?: string;
   message?: string;
-  onUpdate: (banner: Partial<BannerConfig>) => void;
+  onUpdate: (banner: Partial<BannerConfig>) => Promise<void>;
   onEdit: () => void;
   onDelete: () => void;
 }
@@ -36,7 +35,7 @@ export const NotificationBannerItem: FC<NotificationBannerItemProps> = ({
         <Checkbox
           size="small"
           checked={enabled}
-          onClick={() => onUpdate({ enabled: !enabled })}
+          onClick={() => void onUpdate({ enabled: !enabled })}
         />
       </TableCell>
 

@@ -1,15 +1,15 @@
-import Button from "@mui/material/Button";
-import DialogActions from "@mui/material/DialogActions";
 import { type Interpolation, type Theme, useTheme } from "@emotion/react";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import type { FC } from "react";
-import { Dialog, DialogActionButtons } from "components/Dialogs/Dialog";
-import { BannerConfig } from "api/typesGenerated";
-import TextField from "@mui/material/TextField";
 import { BlockPicker } from "react-color";
-import { getFormHelpers } from "utils/formUtils";
-import { NotificationBannerView } from "modules/dashboard/NotificationBanners/NotificationBannerView";
+import type { BannerConfig } from "api/typesGenerated";
+import { Dialog, DialogActionButtons } from "components/Dialogs/Dialog";
 import { Stack } from "components/Stack/Stack";
+import { NotificationBannerView } from "modules/dashboard/NotificationBanners/NotificationBannerView";
+import { getFormHelpers } from "utils/formUtils";
+
 interface NotificationBannerDialogProps {
   banner: BannerConfig;
   onCancel: () => void;
