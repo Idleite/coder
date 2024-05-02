@@ -1,10 +1,17 @@
 import type { FC } from "react";
 import type { BannerConfig } from "api/typesGenerated";
+import Checkbox from "@mui/material/Checkbox";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import Edit from "@mui/icons-material/Edit";
-import { Checkbox, IconButton } from "@mui/material";
 import type { Interpolation, Theme } from "@emotion/react";
+import {
+  MoreMenu,
+  MoreMenuContent,
+  MoreMenuItem,
+  MoreMenuTrigger,
+  ThreeDotsButton,
+} from "components/MoreMenu/MoreMenu";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface NotificationBannerItemProps {
   enabled: boolean;
@@ -12,6 +19,7 @@ interface NotificationBannerItemProps {
   message?: string;
   onUpdate: (banner: Partial<BannerConfig>) => void;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 export const NotificationBannerItem: FC<NotificationBannerItemProps> = ({
@@ -20,6 +28,7 @@ export const NotificationBannerItem: FC<NotificationBannerItemProps> = ({
   message,
   onUpdate,
   onEdit,
+  onDelete,
 }) => {
   return (
     <TableRow>
@@ -38,9 +47,17 @@ export const NotificationBannerItem: FC<NotificationBannerItemProps> = ({
       </TableCell>
 
       <TableCell>
-        <IconButton size="small" onClick={onEdit}>
-          <Edit fontSize="small" />
-        </IconButton>
+        <MoreMenu>
+          <MoreMenuTrigger>
+            <ThreeDotsButton />
+          </MoreMenuTrigger>
+          <MoreMenuContent>
+            <MoreMenuItem onClick={() => onEdit()}>Edit&hellip;</MoreMenuItem>
+            <MoreMenuItem onClick={() => onDelete()} danger>
+              Delete&hellip;
+            </MoreMenuItem>
+          </MoreMenuContent>
+        </MoreMenu>
       </TableCell>
     </TableRow>
   );

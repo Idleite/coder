@@ -31,6 +31,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { NotificationBannerDialog } from "./NotificationBannerDialog";
+import { DeleteDialog } from "components/Dialogs/DeleteDialog/DeleteDialog";
+import { ConfirmDialog } from "components/Dialogs/ConfirmDialog/ConfirmDialog";
 
 interface NotificationBannerSettingsProps {
   notificationBanners: readonly BannerConfig[];
@@ -42,6 +44,7 @@ export const NotificationBannerSettings: FC<
 > = ({ notificationBanners, onSubmit }) => {
   const [banners, setBanners] = useState(notificationBanners);
   const [editingBannerId, setEditingBannerId] = useState<number | null>(null);
+  const [deletingBannerId, setDeletingBannerId] = useState<number | null>(null);
 
   const addBanner = () => {
     setBanners([
@@ -66,6 +69,7 @@ export const NotificationBannerSettings: FC<
   };
 
   const editingBanner = editingBannerId !== null && banners[editingBannerId];
+  const deletingBanner = deletingBannerId !== null && banners[deletingBannerId];
 
   return (
     <>
@@ -112,6 +116,7 @@ export const NotificationBannerSettings: FC<
                       updateBanner(i, banner);
                       onSubmit(banners);
                     }}
+                    onDelete={() => setDeletingBannerId(i)}
                   />
                 ))
               )}
@@ -126,12 +131,21 @@ export const NotificationBannerSettings: FC<
           onUpdate={async (banner) => {
             const newBanners = updateBanner(editingBannerId, banner);
             setEditingBannerId(null);
-            return onSubmit(newBanners);
+            await onSubmit(newBanners);
           }}
-          onRemove={async () => {
-            const newBanners = removeBanner(editingBannerId);
+        />
+      )}
+      {deletingBanner && (
+        <ConfirmDialog
+          type="delete"
+          open
+          title="Delete this banner?"
+          description={deletingBanner.message}
+          onClose={() => setDeletingBannerId(null)}
+          onConfirm={async () => {
+            const newBanners = removeBanner(deletingBannerId);
             setEditingBannerId(null);
-            return onSubmit(newBanners);
+            await onSubmit(newBanners);
           }}
         />
       )}
