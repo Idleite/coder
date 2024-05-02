@@ -17,12 +17,14 @@ export const NotificationBannerView: FC<NotificationBannerViewProps> = ({
   }
 
   return (
-    <div css={[styles.banner, { backgroundColor }]} className="service-banner">
+    <div
+      css={styles.banner}
+      style={{ backgroundColor }}
+      className="service-banner"
+    >
       <div
-        css={[
-          styles.wrapper,
-          { color: readableForegroundColor(backgroundColor) },
-        ]}
+        css={styles.wrapper}
+        style={{ color: readableForegroundColor(backgroundColor) }}
       >
         <InlineMarkdown>{message}</InlineMarkdown>
       </div>

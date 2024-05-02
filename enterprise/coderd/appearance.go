@@ -196,6 +196,9 @@ func (api *API) putAppearance(rw http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if appearance.NotificationBanners == nil {
+		appearance.NotificationBanners = []codersdk.BannerConfig{}
+	}
 	notificationBannersJSON, err := json.Marshal(appearance.NotificationBanners)
 	if err != nil {
 		httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{

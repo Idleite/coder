@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import { type FC, useState } from "react";
 import { BlockPicker } from "react-color";
-import type { BannerConfig, UpdateAppearanceConfig } from "api/typesGenerated";
+import type { UpdateAppearanceConfig } from "api/typesGenerated";
 import {
   Badges,
   DeprecatedBadge,
@@ -21,7 +21,7 @@ import colors from "theme/tailwindColors";
 import { getFormHelpers } from "utils/formUtils";
 import { Fieldset } from "../Fieldset";
 import { Header } from "../Header";
-import { NotificationBannerItem } from "./NotificationBannerItem";
+import { NotificationBannerSettings } from "./NotificationBannerSettings";
 
 export type AppearanceSettingsPageViewProps = {
   appearance: UpdateAppearanceConfig;
@@ -29,7 +29,7 @@ export type AppearanceSettingsPageViewProps = {
   onSaveAppearance: (
     newConfig: Partial<UpdateAppearanceConfig>,
     preview?: boolean,
-  ) => void;
+  ) => Promise<void>;
 };
 
 const fallbackBgColor = colors.neutral[500];
@@ -81,36 +81,6 @@ export const AppearanceSettingsPageView: FC<
   const [backgroundColor, setBackgroundColor] = useState(
     serviceBannerForm.values.background_color,
   );
-
-  const [notificationBanners, setNotificationBanners] = useState(
-    appearance.notification_banners,
-  );
-
-  const addNotificationBannerItem = () => {
-    setNotificationBanners((banners) => [
-      ...banners,
-      { enabled: true, message: "foob", background_color: "#004852" },
-    ]);
-  };
-
-  const updateNotificationBannerItem = (
-    i: number,
-    banner: Partial<BannerConfig>,
-  ) => {
-    setNotificationBanners((banners) => {
-      const newBanners = [...banners];
-      newBanners[i] = { ...banners[i], ...banner };
-      return newBanners;
-    });
-  };
-
-  const removeNotificationBannerItem = (i: number) => {
-    setNotificationBanners((banners) => {
-      const newBanners = [...banners];
-      newBanners.splice(i, 1);
-      return newBanners;
-    });
-  };
 
   return (
     <>
@@ -313,40 +283,12 @@ export const AppearanceSettingsPageView: FC<
         )}
       </Fieldset>
 
-      <Fieldset
-        title="Notification Banners"
-        onSubmit={() =>
-          onSaveAppearance({
-            notification_banners: notificationBanners,
-          })
+      <NotificationBannerSettings
+        notificationBanners={appearance.notification_banners || []}
+        onSubmit={(notificationBanners) =>
+          onSaveAppearance({ notification_banners: notificationBanners })
         }
-      >
-        <>
-          <Button onClick={() => addNotificationBannerItem()}>+</Button>
-          <Stack spacing={4}>
-            {notificationBanners
-              .filter((banner) => banner.enabled)
-              .map((banner, i) => (
-                <NotificationBannerItem
-                  key={i}
-                  enabled={banner.enabled}
-                  backgroundColor={banner.background_color}
-                  message={banner.message}
-                  onRemove={() => removeNotificationBannerItem(i)}
-                  onUpdate={(banner: Partial<BannerConfig>) => {
-                    const shouldPersist = "enabled" in banner;
-                    updateNotificationBannerItem(i, banner);
-                    if (shouldPersist) {
-                      onSaveAppearance({
-                        notification_banners: notificationBanners,
-                      });
-                    }
-                  }}
-                />
-              ))}
-          </Stack>
-        </>
-      </Fieldset>
+      />
     </>
   );
 };

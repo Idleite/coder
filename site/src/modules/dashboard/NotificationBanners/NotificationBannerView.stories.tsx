@@ -11,14 +11,14 @@ type Story = StoryObj<typeof NotificationBannerView>;
 
 export const Production: Story = {
   args: {
-    message: "weeeee",
-    backgroundColor: "#FFFFFF",
+    message: "Unfortunately, there's a radio connected to my brain.",
+    backgroundColor: "#ffaff3",
   },
 };
 
 export const Preview: Story = {
   args: {
-    message: "weeeee",
-    backgroundColor: "#000000",
+    message: "バアン バン バン バン バアン ブレイバアン！",
+    backgroundColor: "#4cd473",
   },
 };

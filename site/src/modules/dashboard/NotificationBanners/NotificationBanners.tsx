@@ -10,11 +10,11 @@ export const NotificationBanners: FC = () => {
     <>
       {notificationBanners
         .filter((banner) => banner.enabled)
-        .map(({ message, background_color }) => (
+        .map((banner) => (
           <NotificationBannerView
-            key={message}
-            message={message}
-            backgroundColor={background_color}
+            key={banner.message}
+            message={banner.message}
+            backgroundColor={banner.background_color}
           />
         ))}
     </>

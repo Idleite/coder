@@ -1,97 +1,59 @@
-import { useTheme } from "@emotion/react";
-import Delete from "@mui/icons-material/Delete";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import type { FC } from "react";
-import { BlockPicker } from "react-color";
 import type { BannerConfig } from "api/typesGenerated";
-import Switch from "@mui/material/Switch";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import Edit from "@mui/icons-material/Edit";
+import { Checkbox, IconButton } from "@mui/material";
+import type { Interpolation, Theme } from "@emotion/react";
 
 interface NotificationBannerItemProps {
   enabled: boolean;
   backgroundColor?: string;
   message?: string;
-  onRemove: () => void;
   onUpdate: (banner: Partial<BannerConfig>) => void;
+  onEdit: () => void;
 }
 
 export const NotificationBannerItem: FC<NotificationBannerItemProps> = ({
   enabled,
-  backgroundColor,
+  backgroundColor = "#004852",
   message,
-  onRemove,
   onUpdate,
+  onEdit,
 }) => {
-  const theme = useTheme();
-
   return (
-    <div>
-      <div>
-        <Switch
+    <TableRow>
+      <TableCell>
+        <Checkbox
+          size="small"
           checked={enabled}
-          onChange={() => onUpdate({ enabled: !enabled })}
-          data-testid="switch-service-banner"
+          onClick={() => onUpdate({ enabled: !enabled })}
         />
-        <Button onClick={onRemove}>
-          <Delete />
-        </Button>
-      </div>
-      <div css={{ backgroundColor }}>{message}</div>
+      </TableCell>
 
-      <TextField
-        // {...serviceBannerFieldHelpers("message", {
-        //   helperText:
-        //     ,
-        // })}
-        onChange={(event) => onUpdate({ message: event.target.value })}
-        defaultValue={message}
-        helperText="Markdown bold, italics, and links are supported."
-        fullWidth
-        label="Message"
-        multiline
-        inputProps={{
-          "aria-label": "Message",
-        }}
-      />
+      <TableCell css={!enabled && styles.disabled}>{message}</TableCell>
 
-      <button
-        type="button"
-        css={{
-          backgroundColor,
-          width: 24,
-          height: 24,
-          outline: "none",
-          border: "none",
-          borderRadius: 4,
-        }}
-      ></button>
-      <details>
-        <summary>Background Color</summary>
-        <BlockPicker
-          color={backgroundColor}
-          onChange={async (color) => {
-            // TODO: preview the color?
-            onUpdate({ background_color: color.hex });
-          }}
-          triangle="hide"
-          colors={["#004852", "#D65D0F", "#4CD473", "#D94A5D", "#5A00CF"]}
-          styles={{
-            default: {
-              input: {
-                color: "white",
-                backgroundColor: theme.palette.background.default,
-              },
-              body: {
-                backgroundColor: "black",
-                color: "white",
-              },
-              card: {
-                backgroundColor: "black",
-              },
-            },
-          }}
-        />
-      </details>
-    </div>
+      <TableCell>
+        <div css={styles.colorSample} style={{ backgroundColor }}></div>
+      </TableCell>
+
+      <TableCell>
+        <IconButton size="small" onClick={onEdit}>
+          <Edit fontSize="small" />
+        </IconButton>
+      </TableCell>
+    </TableRow>
   );
 };
+
+const styles = {
+  disabled: (theme) => ({
+    color: theme.roles.inactive.fill.outline,
+  }),
+
+  colorSample: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+  },
+} satisfies Record<string, Interpolation<Theme>>;
