@@ -8313,7 +8313,7 @@ func (q *FakeQuerier) UpsertProvisionerDaemon(_ context.Context, arg database.Up
 	return d, nil
 }
 
-func (q *FakeQuerier) UpsertServiceBanner(_ context.Context, _ string) error {
+func (*FakeQuerier) UpsertServiceBanner(_ context.Context, _ string) error {
 	return ErrUnimplemented
 }
 

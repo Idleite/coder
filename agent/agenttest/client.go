@@ -178,11 +178,11 @@ func (f *FakeAgentAPI) GetManifest(context.Context, *agentproto.GetManifestReque
 	return f.manifest, nil
 }
 
-func (f *FakeAgentAPI) GetServiceBanner(context.Context, *agentproto.GetNotificationBannersRequest) (*agentproto.ServiceBanner, error) {
+func (*FakeAgentAPI) GetServiceBanner(context.Context, *agentproto.GetServiceBannerRequest) (*agentproto.ServiceBanner, error) {
 	return &agentproto.ServiceBanner{}, nil
 }
 
-func (f *FakeAgentAPI) SetNotificationBannersFunc(fn func() ([]codersdk.ServiceBannerConfig, error)) {
+func (f *FakeAgentAPI) SetNotificationBannersFunc(fn func() ([]codersdk.BannerConfig, error)) {
 	f.Lock()
 	defer f.Unlock()
 	f.getNotificationBannersFunc = fn

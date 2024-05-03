@@ -15,9 +15,16 @@ type NotificationBannerAPI struct {
 	appearanceFetcher *atomic.Pointer[appearance.Fetcher]
 }
 
-// Deprecated: ServiceBanners has been deprecated in favor of NotificationBanners.
+// Deprecated: GetServiceBanner has been deprecated in favor of GetNotificationBanners.
 func (a *NotificationBannerAPI) GetServiceBanner(ctx context.Context, _ *proto.GetServiceBannerRequest) (*proto.ServiceBanner, error) {
-	return &proto.ServiceBanner{}, nil
+	cfg, err := (*a.appearanceFetcher.Load()).Fetch(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fetch appearance: %w", err)
+	}
+	if cfg.NotificationBanners == nil || len(cfg.NotificationBanners) == 0 {
+		return &proto.ServiceBanner{}, nil
+	}
+	return agentsdk.ProtoFromServiceBanner(cfg.NotificationBanners[0]), nil
 }
 
 func (a *NotificationBannerAPI) GetNotificationBanners(ctx context.Context, _ *proto.GetNotificationBannersRequest) (*proto.GetNotificationBannersResponse, error) {

@@ -20,7 +20,6 @@ export type AppearanceSettingsPageViewProps = {
   isEntitled: boolean;
   onSaveAppearance: (
     newConfig: Partial<UpdateAppearanceConfig>,
-    preview?: boolean,
   ) => Promise<void>;
 };
 
@@ -33,7 +32,7 @@ export const AppearanceSettingsPageView: FC<
     initialValues: {
       application_name: appearance.application_name,
     },
-    onSubmit: (values) => onSaveAppearance(values, false),
+    onSubmit: (values) => onSaveAppearance(values),
   });
   const applicationNameFieldHelpers = getFormHelpers(applicationNameForm);
 
@@ -43,7 +42,7 @@ export const AppearanceSettingsPageView: FC<
     initialValues: {
       logo_url: appearance.logo_url,
     },
-    onSubmit: (values) => onSaveAppearance(values, false),
+    onSubmit: (values) => onSaveAppearance(values),
   });
   const logoFieldHelpers = getFormHelpers(logoForm);
 
