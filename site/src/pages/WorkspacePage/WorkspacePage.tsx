@@ -13,9 +13,9 @@ import { Margins } from "components/Margins/Margins";
 import { useAuthenticated } from "contexts/auth/RequireAuth";
 import { useEffectEvent } from "hooks/hookPolyfills";
 import { Navbar } from "modules/dashboard/Navbar/Navbar";
+import { NotificationBanners } from "modules/dashboard/NotificationBanners/NotificationBanners";
 import { workspaceChecks, type WorkspacePermissions } from "./permissions";
 import { WorkspaceReadyPage } from "./WorkspaceReadyPage";
-import { NotificationBanners } from "modules/dashboard/NotificationBanners/NotificationBanners";
 
 export const WorkspacePage: FC = () => {
   const queryClient = useQueryClient();
