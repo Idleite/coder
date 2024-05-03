@@ -20,5 +20,5 @@ func (a *ServiceBannerAPI) GetServiceBanner(ctx context.Context, _ *proto.GetSer
 	if err != nil {
 		return nil, xerrors.Errorf("fetch appearance: %w", err)
 	}
-	return agentsdk.ProtoFromServiceBanner(cfg.ServiceBanner), nil
+	return agentsdk.ProtoFromServiceBanner(cfg.XServiceBanner), nil
 }

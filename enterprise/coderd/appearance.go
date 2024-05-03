@@ -57,7 +57,6 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 	var (
 		applicationName         string
 		logoURL                 string
-		serviceBannerJSON       string
 		notificationBannersJSON string
 	)
 	eg.Go(func() (err error) {
@@ -71,13 +70,6 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 		logoURL, err = f.database.GetLogoURL(ctx)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			return xerrors.Errorf("get logo url: %w", err)
-		}
-		return nil
-	})
-	eg.Go(func() (err error) {
-		serviceBannerJSON, err = f.database.GetServiceBanner(ctx)
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			return xerrors.Errorf("get service banner: %w", err)
 		}
 		return nil
 	})
@@ -100,14 +92,6 @@ func (f *appearanceFetcher) Fetch(ctx context.Context) (codersdk.AppearanceConfi
 		SupportLinks:        agpl.DefaultSupportLinks,
 	}
 
-	if serviceBannerJSON != "" {
-		err = json.Unmarshal([]byte(serviceBannerJSON), &cfg.ServiceBanner)
-		if err != nil {
-			return codersdk.AppearanceConfig{}, xerrors.Errorf(
-				"unmarshal service banner json: %w, raw: %s", err, serviceBannerJSON,
-			)
-		}
-	}
 	if notificationBannersJSON != "" {
 		err = json.Unmarshal([]byte(notificationBannersJSON), &cfg.NotificationBanners)
 		if err != nil {
@@ -155,34 +139,6 @@ func (api *API) putAppearance(rw http.ResponseWriter, r *http.Request) {
 
 	var appearance codersdk.UpdateAppearanceConfig
 	if !httpapi.Read(ctx, rw, r, &appearance) {
-		return
-	}
-
-	if appearance.ServiceBanner.Enabled {
-		if err := validateHexColor(appearance.ServiceBanner.BackgroundColor); err != nil {
-			httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{
-				Message: fmt.Sprintf("Invalid color format: %q", appearance.ServiceBanner.BackgroundColor),
-				Detail:  err.Error(),
-			})
-			return
-		}
-	}
-
-	serviceBannerJSON, err := json.Marshal(appearance.ServiceBanner)
-	if err != nil {
-		httpapi.Write(ctx, rw, http.StatusBadRequest, codersdk.Response{
-			Message: "Unable to marshal service banner",
-			Detail:  err.Error(),
-		})
-		return
-	}
-
-	err = api.Database.UpsertServiceBanner(ctx, string(serviceBannerJSON))
-	if err != nil {
-		httpapi.Write(ctx, rw, http.StatusInternalServerError, codersdk.Response{
-			Message: "Unable to set service banner",
-			Detail:  err.Error(),
-		})
 		return
 	}
 
