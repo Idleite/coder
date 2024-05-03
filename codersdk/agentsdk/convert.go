@@ -293,6 +293,22 @@ func ProtoFromServiceBanner(sb codersdk.BannerConfig) *proto.ServiceBanner {
 	}
 }
 
+func BannerConfigFromProto(sbp *proto.BannerConfig) codersdk.BannerConfig {
+	return codersdk.BannerConfig{
+		Enabled:         sbp.GetEnabled(),
+		Message:         sbp.GetMessage(),
+		BackgroundColor: sbp.GetBackgroundColor(),
+	}
+}
+
+func ProtoFromBannerConfig(sb codersdk.BannerConfig) *proto.BannerConfig {
+	return &proto.BannerConfig{
+		Enabled:         sb.Enabled,
+		Message:         sb.Message,
+		BackgroundColor: sb.BackgroundColor,
+	}
+}
+
 func ProtoFromSubsystems(ss []codersdk.AgentSubsystem) ([]proto.Startup_Subsystem, error) {
 	ret := make([]proto.Startup_Subsystem, len(ss))
 	for i, s := range ss {
