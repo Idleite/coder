@@ -9,6 +9,7 @@ import type {
   Experiments,
 } from "api/typesGenerated";
 import { Loader } from "components/Loader/Loader";
+import { useEmbeddedMetadata } from "hooks/useEmbeddedMetadata";
 
 export interface DashboardValue {
   entitlements: Entitlements;
@@ -21,9 +22,10 @@ export const DashboardContext = createContext<DashboardValue | undefined>(
 );
 
 export const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
-  const entitlementsQuery = useQuery(entitlements());
-  const experimentsQuery = useQuery(experiments());
-  const appearanceQuery = useQuery(appearance());
+  const { metadata } = useEmbeddedMetadata();
+  const entitlementsQuery = useQuery(entitlements(metadata.entitlements));
+  const experimentsQuery = useQuery(experiments(metadata.experiments));
+  const appearanceQuery = useQuery(appearance(metadata.appearance));
 
   const isLoading =
     !entitlementsQuery.data || !appearanceQuery.data || !experimentsQuery.data;
