@@ -13,9 +13,9 @@ import { Margins } from "components/Margins/Margins";
 import { useAuthenticated } from "contexts/auth/RequireAuth";
 import { useEffectEvent } from "hooks/hookPolyfills";
 import { Navbar } from "modules/dashboard/Navbar/Navbar";
-import { ServiceBanner } from "modules/dashboard/ServiceBanner/ServiceBanner";
 import { workspaceChecks, type WorkspacePermissions } from "./permissions";
 import { WorkspaceReadyPage } from "./WorkspaceReadyPage";
+import { NotificationBanners } from "modules/dashboard/NotificationBanners/NotificationBanners";
 
 export const WorkspacePage: FC = () => {
   const queryClient = useQueryClient();
@@ -106,7 +106,7 @@ export const WorkspacePage: FC = () => {
 
   return (
     <>
-      <ServiceBanner />
+      <NotificationBanners />
       <div css={{ height: "100%", display: "flex", flexDirection: "column" }}>
         <Navbar />
         {pageError ? (

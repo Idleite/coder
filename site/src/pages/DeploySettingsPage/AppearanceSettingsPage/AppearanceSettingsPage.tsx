@@ -20,13 +20,8 @@ const AppearanceSettingsPage: FC = () => {
 
   const onSaveAppearance = async (
     newConfig: Partial<UpdateAppearanceConfig>,
-    preview: boolean = false,
   ) => {
-    const newAppearance = { ...appearance.config, ...newConfig };
-    if (preview) {
-      appearance.setPreview(newAppearance);
-      return;
-    }
+    const newAppearance = { ...appearance, ...newConfig };
 
     try {
       await updateAppearanceMutation.mutateAsync(newAppearance);
@@ -46,7 +41,7 @@ const AppearanceSettingsPage: FC = () => {
       </Helmet>
 
       <AppearanceSettingsPageView
-        appearance={appearance.config}
+        appearance={appearance}
         onSaveAppearance={onSaveAppearance}
         isEntitled={
           entitlements.features.appearance.entitlement !== "not_entitled"

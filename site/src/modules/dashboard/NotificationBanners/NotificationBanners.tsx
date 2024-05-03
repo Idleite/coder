@@ -4,7 +4,7 @@ import { NotificationBannerView } from "./NotificationBannerView";
 
 export const NotificationBanners: FC = () => {
   const dashboard = useDashboard();
-  const notificationBanners = dashboard.appearance.config.notification_banners;
+  const notificationBanners = dashboard.appearance.notification_banners;
 
   return (
     <>
