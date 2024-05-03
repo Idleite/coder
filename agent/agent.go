@@ -193,7 +193,7 @@ func New(options Options) Agent {
 	// that gets closed on disconnection.  This is used to wait for graceful disconnection from the
 	// coordinator during shut down.
 	close(a.coordDisconnected)
-	a.notificationBanners.Store(new([]codersdk.ServiceBannerConfig))
+	a.notificationBanners.Store(new([]codersdk.BannerConfig))
 	a.sessionToken.Store(new(string))
 	a.init()
 	return a

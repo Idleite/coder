@@ -138,8 +138,8 @@ func (c *Client) GetStartupLogs() []agentsdk.Log {
 	return c.logs
 }
 
-func (c *Client) SetServiceBannerFunc(f func() (codersdk.ServiceBannerConfig, error)) {
-	c.fakeAgentAPI.SetServiceBannerFunc(f)
+func (c *Client) SetNotificationBannersFunc(f func() ([]codersdk.ServiceBannerConfig, error)) {
+	c.fakeAgentAPI.SetNotificationBannersFunc(f)
 }
 
 func (c *Client) PushDERPMapUpdate(update *tailcfg.DERPMap) error {
@@ -178,24 +178,24 @@ func (f *FakeAgentAPI) GetManifest(context.Context, *agentproto.GetManifestReque
 	return f.manifest, nil
 }
 
-func (f *FakeAgentAPI) SetNotificationBannersFunc(fn func() ([]codersdk.BannerConfig, error)) {
+func (f *FakeAgentAPI) GetServiceBanner(fn func() ([]codersdk.ServiceBannerConfig, error)) {
 	f.Lock()
 	defer f.Unlock()
 	f.getNotificationBannersFunc = fn
 	f.logger.Info(context.Background(), "updated ServiceBannerFunc")
 }
 
-func (f *FakeAgentAPI) GetServiceBanner(context.Context, *agentproto.GetServiceBannerRequest) (*agentproto.ServiceBanner, error) {
+func (f *FakeAgentAPI) SetNotificationBannersFunc(context.Context, *agentproto.GetNotificationBannersRequest) (*agentproto.ServiceBanner, error) {
 	f.Lock()
 	defer f.Unlock()
 	return &agentproto.ServiceBanner{}, nil
 }
 
-func (f *FakeAgentAPI) GetNotificationBanners(context.Context, *agentproto.GetServiceBannerRequest) ([]*agentproto.BannerConfig, error) {
+func (f *FakeAgentAPI) GetNotificationBanners(context.Context, *agentproto.GetNotificationBannersRequest) (*agentproto.GetNotificationBannersResponse, error) {
 	f.Lock()
 	defer f.Unlock()
 	if f.getNotificationBannersFunc == nil {
-		return []*agentproto.BannerConfig{}, nil
+		return &agentproto.GetNotificationBannersResponse{NotificationBanners: []*agentproto.BannerConfig{}}, nil
 	}
 	banners, err := f.getNotificationBannersFunc()
 	if err != nil {
@@ -205,7 +205,7 @@ func (f *FakeAgentAPI) GetNotificationBanners(context.Context, *agentproto.GetSe
 	for _, banner := range banners {
 		bannersProto = append(bannersProto, agentsdk.ProtoFromBannerConfig(banner))
 	}
-	return bannersProto, nil
+	return &agentproto.GetNotificationBannersResponse{NotificationBanners: bannersProto}, nil
 }
 
 func (f *FakeAgentAPI) UpdateStats(ctx context.Context, req *agentproto.UpdateStatsRequest) (*agentproto.UpdateStatsResponse, error) {
