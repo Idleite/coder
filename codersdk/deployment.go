@@ -2102,7 +2102,7 @@ func (c *Client) DeploymentStats(ctx context.Context) (DeploymentStats, error) {
 type AppearanceConfig struct {
 	ApplicationName string `json:"application_name"`
 	LogoURL         string `json:"logo_url"`
-	// ServiceBanner is for a single banner, and has been replaced by NotificationBanners. Deprecated.
+	// Deprecated: ServiceBanner is for a single banner, and has been replaced by NotificationBanners.
 	ServiceBanner       BannerConfig   `json:"service_banner"`
 	NotificationBanners []BannerConfig `json:"notification_banners"`
 	SupportLinks        []LinkConfig   `json:"support_links,omitempty"`
@@ -2111,7 +2111,7 @@ type AppearanceConfig struct {
 type UpdateAppearanceConfig struct {
 	ApplicationName string `json:"application_name"`
 	LogoURL         string `json:"logo_url"`
-	// ServiceBanner is for a single banner, and has been replaced by NotificationBanners. Deprecated.
+	// Deprecated: ServiceBanner is for a single banner, and has been replaced by NotificationBanners.
 	ServiceBanner       BannerConfig   `json:"service_banner"`
 	NotificationBanners []BannerConfig `json:"notification_banners"`
 }
