@@ -2103,7 +2103,7 @@ type AppearanceConfig struct {
 	ApplicationName string `json:"application_name"`
 	LogoURL         string `json:"logo_url"`
 	// Deprecated: ServiceBanner is for a single banner, and has been replaced by NotificationBanners.
-	XServiceBanner      BannerConfig   `json:"service_banner"`
+	ServiceBanner       BannerConfig   `json:"service_banner"`
 	NotificationBanners []BannerConfig `json:"notification_banners"`
 	SupportLinks        []LinkConfig   `json:"support_links,omitempty"`
 }
@@ -2112,7 +2112,7 @@ type UpdateAppearanceConfig struct {
 	ApplicationName string `json:"application_name"`
 	LogoURL         string `json:"logo_url"`
 	// Deprecated: ServiceBanner is for a single banner, and has been replaced by NotificationBanners.
-	XServiceBanner      BannerConfig   `json:"service_banner"`
+	ServiceBanner       BannerConfig   `json:"service_banner"`
 	NotificationBanners []BannerConfig `json:"notification_banners"`
 }
 

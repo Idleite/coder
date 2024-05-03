@@ -185,7 +185,6 @@ type data struct {
 	deploymentID            string
 	derpMeshKey             string
 	lastUpdateCheck         []byte
-	serviceBanner           []byte
 	notificationBanners     []byte
 	healthSettings          []byte
 	applicationName         string
@@ -3043,11 +3042,7 @@ func (q *FakeQuerier) GetServiceBanner(_ context.Context) (string, error) {
 	q.mutex.RLock()
 	defer q.mutex.RUnlock()
 
-	if q.serviceBanner == nil {
-		return "", sql.ErrNoRows
-	}
-
-	return string(q.serviceBanner), nil
+	return "", sql.ErrNoRows
 }
 
 func (*FakeQuerier) GetTailnetAgents(context.Context, uuid.UUID) ([]database.TailnetAgent, error) {
@@ -8318,12 +8313,8 @@ func (q *FakeQuerier) UpsertProvisionerDaemon(_ context.Context, arg database.Up
 	return d, nil
 }
 
-func (q *FakeQuerier) UpsertServiceBanner(_ context.Context, data string) error {
-	q.mutex.RLock()
-	defer q.mutex.RUnlock()
-
-	q.serviceBanner = []byte(data)
-	return nil
+func (q *FakeQuerier) UpsertServiceBanner(_ context.Context, _ string) error {
+	return ErrUnimplemented
 }
 
 func (*FakeQuerier) UpsertTailnetAgent(context.Context, database.UpsertTailnetAgentParams) (database.TailnetAgent, error) {

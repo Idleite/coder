@@ -117,7 +117,6 @@ func TestNotificationBanners(t *testing.T) {
 		require.Equal(t, http.StatusBadRequest, sdkErr.StatusCode())
 		require.Contains(t, sdkErr.Message, "Invalid color format")
 		require.Contains(t, sdkErr.Detail, "expected # prefix and 6 characters")
-
 	})
 
 	t.Run("Agent", func(t *testing.T) {
